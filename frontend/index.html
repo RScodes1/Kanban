@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanban Board</title>
+</head>
+<body>
+<div id="kanban-container"></div>
+<button id="add-board-btn">Add Board</button>
+
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Add New Task</h2>
+    <label for="task-name">Task Name:</label>
+    <input type="text" id="task-name">
+    <label for="description">Description:</label>
+    <textarea id="description"></textarea>
+    <label for="subtasks">Subtasks:</label>
+    <div id="subtasks-container">
+      <input type="text" class="subtask-input">
+    </div>
+    <button id="add-subtask-btn">Add Subtask</button>
+    <label for="status">Status:</label>
+    <select id="status">
+      <option value="todo">Todo</option>
+      <option value="doing">Doing</option>
+      <option value="done">Done</option>
+    </select>
+    <button id="create-task-btn">Create Task</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
