@@ -19,3 +19,8 @@ To get started with the project, follow these steps:
    git clone https://github.com/your-username/kanban-board.git
    ```
 
+
+2. install
+    ``` cd kanban-board
+npm install
+```
