@@ -17,6 +17,5 @@ To get started with the project, follow these steps:
 
    ```bash
    git clone https://github.com/your-username/kanban-board.git
-
-
+   ```
 
