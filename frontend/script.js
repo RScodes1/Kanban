@@ -1,3 +1,5 @@
+const apiUrl = 'https://kanban-backend-api-url'; 
+
 let kanbanContainer = document.getElementById("kanban-container");
 let addBoardBtn = document.getElementById("add-board-btn");
 let modal = document.getElementById("modal");
@@ -56,11 +58,135 @@ function createColumn(title) {
   return column;
 }
 
-document.getElementById("create-task-btn").onclick = function() {
+document.getElementById("create-task-btn").onclick =async function() {
+
   let taskName = document.getElementById("task-name").value;
   let description = document.getElementById("description").value;
   let subtasks = Array.from(document.getElementsByClassName("subtask-input")).map(input => input.value);
   let status = document.getElementById("status").value;
+
+  let requestData = {
+    taskName: taskName,
+    description: description,
+    subtasks: subtasks,
+    status: status
+  };
+
+  try {
+    const response = await fetch(apiUrl + '/tasks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestData)
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Task created:', data);
+      // Refresh the UI or take other actions as needed
+    } else {
+      console.error('Failed to create task:', response.statusText);
+      // Handle error response
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
+  async function fetchBoards() {
+    try {
+      const response = await fetch(apiUrl + '/boards', {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+      });
+      const data = await response.json();
+      console.log('Boards:', data);
+      // Update your UI to display the fetched boards
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  async function createBoard(name) {
+    try {
+      const response = await fetch(apiUrl + '/boards', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({ name: name })
+      });
+      const data = await response.json();
+      console.log('Board created:', data);
+      // Update your UI or take other actions as needed
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  async function createTask(title, description, status, subtasks) {
+    try {
+      const response = await fetch(apiUrl + '/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({ title, description, status, subtasks })
+      });
+      const data = await response.json();
+      console.log('Task created:', data);
+      // Update your UI or take other actions as needed
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  async function updateTaskStatus(id, status) {
+    try {
+      const response = await fetch(apiUrl + '/tasks/' + id, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({ status: status })
+      });
+      const data = await response.json();
+      console.log('Task status updated:', data);
+      // Update your UI or take other actions as needed
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  fetchBoards(); // Fetch all boards when the page loads
+
+document.getElementById('new-board-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const name = formData.get('name');
+  createBoard(name);
+});
+
+document.getElementById('new-task-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const title = formData.get('title');
+  const description = formData.get('description');
+  const status = formData.get('status');
+  const subtasks = Array.from(formData.getAll('subtask'));
+  createTask(title, description, status, subtasks);
+});
+
+document.getElementById('update-task-status-btn').addEventListener('click', async () => {
+  const taskId = 'your-task-id'; 
+  const newStatus = 'your-new-status'; 
+  updateTaskStatus(taskId, newStatus);
+});
+
 
   let task = document.createElement("div");
   task.classList.add("task");
